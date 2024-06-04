@@ -136,7 +136,7 @@ void DFS(int cur)
     visited[cur] = true;
 
     for (int i = 0; i < graph[cur].size(); i++){
-        int next = graph[cur][i]
+        int next = graph[cur][i];
     }
 
 }
