@@ -50,6 +50,7 @@ void DFS(int cur_x, int cur_y, int steps)
             DFS(next_x, next_y, steps+1);
         }
     }
+
     // 재귀 호출이 끝나면, 백트래킹을 위해 visited를 다시 초기화해줌
     visited[cur_x][cur_y] = false;
 }
