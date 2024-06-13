@@ -123,8 +123,6 @@
 // BFS를 실행하면서, 모든 경우에 대해 벽을 부수는 경우와 아닌 경우를 계산하고,
 // 최단 경로를 찾도록 설계해보자
 
-
-
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -132,31 +130,61 @@ using namespace std;
 
 int N, M;
 
-bool visited[MAX][MAX];
-int matrix[MAX][MAX];
+int matrix[MAX][MAX][2];
+int dx[4] = {0,1,0,-1}, dy[4] = {1,0,-1,0};
 
-void BFS(int cx, int cy)
+int BFS(int N, int M)
 {
-    queue<pair<int,int>> q;
-    q.push({cx,cy});
+    queue<pair<int, pair<int,int>>> q;
+    q.push({0, {0,0}});
+    while(!q.empty())
+    {   
+        int broken = q.front().first;
+        int x = q.front().second.first;
+        int y = q.front().second.second;
+        q.pop();
 
+        if (x == N-1 && y == M-1){
+            return matrix[N-1][M-1][broken] + 1;
+        }
 
+        for (int i = 0; i < 4; i++){
+            int nx = x + dx[i], ny = y + dy[i];
+            if (nx >= 0 && nx < N && ny >= 0 && ny < M){
+                if (matrix[nx][ny][0] == 1)
+                {
+                    if (!broken){
+                        matrix[nx][ny][broken+1] = matrix[x][y][broken] + 1;
+                        q.push({1,{nx, ny}});
+                    }
+                }
+                else if (matrix[nx][ny][0] == 0)
+                {
+                    if (broken == 1 && matrix[nx][ny][broken]) continue;
+                    matrix[nx][ny][broken] = matrix[x][y][broken] + 1;
+                    q.push({broken, {nx, ny}});
+                }
+            }
+        }
+    }
+    return -1;
 }
 
 int main()
 {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+    // ios::usync_with_stdio(0);
+    // cin.tie(0);
 
     cin >> N >> M;
-
+    char x[M];
     for (int r = 0; r < N; r++){
+        cin >> x;
         for (int c = 0; c < M; c++){
-            cin >> matrix[r][c];
+            matrix[r][c][0] = x[c]-'0';
         }
     }
 
-    BFS(0,0);
+    cout << BFS(N, M) << '\n';
 
     return 0;
 }
